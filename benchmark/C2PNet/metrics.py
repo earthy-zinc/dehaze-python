@@ -33,9 +33,9 @@ def _ssim(img1, img2, window, window_size, channel, size_average=True):
     ssim_map = ((2 * mu1_mu2 + C1) * (2 * sigma12 + C2)) / ((mu1_sq + mu2_sq + C1) * (sigma1_sq + sigma2_sq + C2))
 
     if size_average:
-        return ssim_map.mean()
+        return ssim_map.mean().item()
     else:
-        return ssim_map.mean(1).mean(1).mean(1)
+        return ssim_map.mean(1).mean(1).mean(1).item()
 
 
 def ssim(img1, img2, window_size=11, size_average=True):
