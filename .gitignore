@@ -1,1 +1,4 @@
 .idea
+data
+trained_model
+/trained_model/
