@@ -16,7 +16,7 @@ def uploadImage(request: HttpRequest):
     # 保存前端传来的图片
     with open(image_path, "wb") as destination:
         destination.write(image)
-    return HttpResponse(image_name)
+    return HttpResponse(image_name, content_type='application/json')
 
 
 def downloadImage(request: HttpRequest, image_name: str):
@@ -26,23 +26,22 @@ def downloadImage(request: HttpRequest, image_name: str):
 
 
 def dehazeImage(request: HttpRequest):
-    haze_image_name = request.POST["haze_image"]
-    if isinstance(haze_image_name, str):
-        output_image_name = str(uuid.uuid4()) + ".png"
-        haze_image_path = os.path.join(script_dir, "../data/" + haze_image_name)
-        output_image_path = os.path.join(script_dir, "../data/" + output_image_name)
-        try:
-            dehaze(haze_image_path, output_image_path)
-        except RuntimeError as e:
-            return HttpResponse(e)
-        return HttpResponse(output_image_name)
-    else:
-        return HttpResponse("参数错误")
+    data = json.loads(request.body)
+    haze_image_name = data["haze_image"]
+    output_image_name = str(uuid.uuid4()) + ".png"
+    haze_image_path = os.path.join(script_dir, "../data/" + haze_image_name)
+    output_image_path = os.path.join(script_dir, "../data/" + output_image_name)
+    try:
+        dehaze(haze_image_path, output_image_path)
+    except RuntimeError as e:
+        return HttpResponse(e)
+    return HttpResponse(output_image_name, content_type='application/json')
 
 
 def calculateDehazeIndex(request: HttpRequest):
-    haze_image_name = request.POST["haze_image"]
-    clear_image_name = request.POST["clear_image"]
+    data = json.loads(request.body)
+    haze_image_name = data["haze_image"]
+    clear_image_name = data["clear_image"]
     haze_image_path = os.path.join(script_dir, "../data/" + haze_image_name)
     clear_image_path = os.path.join(script_dir, "../data/" + clear_image_name)
 
