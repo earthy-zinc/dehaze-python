@@ -2,11 +2,12 @@ import torch
 from PIL import Image
 import torchvision.transforms as tfs
 import torchvision.utils as torch_utils
+from skimage.metrics import peak_signal_noise_ratio, structural_similarity
 
 from benchmark.C2PNet.model import C2PNet
 import os
 
-from benchmark.C2PNet.metrics import psnr, ssim
+# from benchmark.C2PNet.metrics import psnr, ssim
 from global_variable import MODEL_PATH, DEVICE
 
 
@@ -21,8 +22,8 @@ def get_model(model_name: str):
     return net
 
 
-def dehaze(haze_image_path: str, output_image_path: str):
-    net = get_model('C2PNet/OTS.pkl')
+def dehaze(haze_image_path: str, output_image_path: str, model_name: str = 'C2PNet/OTS.pkl'):
+    net = get_model(model_name)
     haze = Image.open(haze_image_path).convert('RGB')
     haze = tfs.ToTensor()(haze)[None, ::]
     haze = haze.to(DEVICE)
@@ -35,6 +36,8 @@ def dehaze(haze_image_path: str, output_image_path: str):
 def calculate(haze_image_path: str, clear_image_path: str):
     haze = Image.open(haze_image_path).convert('RGB')
     clear = Image.open(clear_image_path).convert('RGB')
-    haze = tfs.ToTensor()(haze)[None, ::]
-    clear = tfs.ToTensor()(clear)[None, ::]
-    return psnr(haze, clear), ssim(haze, clear)
+    haze = tfs.ToTensor()(haze)
+    clear = tfs.ToTensor()(clear)
+    current_psnr = peak_signal_noise_ratio(haze, clear, data_range=1.0)
+    current_ssim = structural_similarity(haze, clear, data_range=1.0, channel_axis=0)
+    return current_psnr, current_ssim

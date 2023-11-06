@@ -28,7 +28,8 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 # APPEND_SLASH = False
-
+# 最大文件上传大小 20MB（单位：字节）
+DATA_UPLOAD_MAX_MEMORY_SIZE = 20971520
 # Application definition
 
 INSTALLED_APPS = [

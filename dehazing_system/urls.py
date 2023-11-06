@@ -21,9 +21,10 @@ import dehazing_system.photo
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('model/', dehazing_system.photo.get_model),
     path("upload/", dehazing_system.photo.upload_image),
     path('download/<str:image_name>/', dehazing_system.photo.download_image),
     path('dehazeImage/', dehazing_system.photo.dehaze_image),
-    path('calucateIndex/', dehazing_system.photo.calculate_dehaze_index),
+    path('calculateIndex/', dehazing_system.photo.calculate_dehaze_index),
 
 ]
