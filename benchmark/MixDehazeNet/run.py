@@ -6,8 +6,7 @@ from PIL import Image
 import torchvision.transforms as tfs
 from global_variable import MODEL_PATH, DEVICE
 import torchvision.utils as torch_utils
-from .model import dehazeformer_t, dehazeformer_s, dehazeformer_b, dehazeformer_d, dehazeformer_w, \
-    dehazeformer_m, dehazeformer_l
+from .model import MixDehazeNet_t, MixDehazeNet_s, MixDehazeNet_b, MixDehazeNet_l
 
 
 def get_model(model_name: str):
@@ -15,7 +14,6 @@ def get_model(model_name: str):
     model_dir = os.path.join(MODEL_PATH, model_name)
     net = eval(model_name.split("/")[2].replace('-', '_').replace('.pth', ''))()
     net = net.to(DEVICE)
-
     state_dict = torch.load(model_dir)['state_dict']
     new_state_dict = OrderedDict()
     for k, v in state_dict.items():
@@ -36,4 +34,3 @@ def dehaze(haze_image_path: str, output_image_path: str, model_name: str = 'Deha
         pred = net(haze)
     ts = torch.squeeze(pred.clamp(0, 1).cpu())
     torch_utils.save_image(ts, output_image_path)
-

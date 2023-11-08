@@ -26,5 +26,4 @@ urlpatterns = [
     path('download/<str:image_name>/', dehazing_system.photo.download_image),
     path('dehazeImage/', dehazing_system.photo.dehaze_image),
     path('calculateIndex/', dehazing_system.photo.calculate_dehaze_index),
-
 ]
