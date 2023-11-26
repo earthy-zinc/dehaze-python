@@ -1,5 +1,6 @@
 import json
 import os.path
+import traceback
 import uuid
 
 from django.http import HttpResponse, HttpRequest
@@ -7,6 +8,11 @@ from django.http import HttpResponse, HttpRequest
 import benchmark.C2PNet.run
 import benchmark.DehazeFormer.run
 import benchmark.MixDehazeNet.run
+import benchmark.CMFNet.run
+import benchmark.DEANet.run
+import benchmark.FogRemoval.run
+import benchmark.ITBdehaze.run
+import benchmark.RIDCP.run
 from benchmark.metrics import calculate
 from global_variable import DATA_PATH
 
@@ -38,7 +44,13 @@ dehaze_model = {
     'MixDehazeNet/outdoor/MixDehazeNet-b.pth': benchmark.MixDehazeNet.run.dehaze,
     'MixDehazeNet/outdoor/MixDehazeNet-l.pth': benchmark.MixDehazeNet.run.dehaze,
     'MixDehazeNet/outdoor/MixDehazeNet-s.pth': benchmark.MixDehazeNet.run.dehaze,
-    # 'MB-TaylorFormer/densehaze-MB-TaylorFormer-B.pth': benchmark..run.dehaze,
+    'CMFNet/dehaze_I_OHaze_CMFNet.pth': benchmark.CMFNet.run.dehaze,
+    'DEA-Net/HAZE4K/PSNR3426_SSIM9885.pth': benchmark.DEANet.run.dehaze,
+    'DEA-Net/ITS/PSNR4131_SSIM9945.pth': benchmark.DEANet.run.dehaze,
+    'DEA-Net/OTS/PSNR3659_SSIM9897.pth': benchmark.DEANet.run.dehaze,
+    'FogRemoval/NH-HAZE_params_0100000.pt': benchmark.FogRemoval.run.dehaze,
+    'ITBdehaze/best.pkl': benchmark.ITBdehaze.run.dehaze,
+    'RIDCP/pretrained_RIDCP.pth': benchmark.RIDCP.run.dehaze,
 }
 
 
@@ -90,18 +102,6 @@ def get_model(request: HttpRequest):
     return ok_response(result)
 
 
-def get_model2(request: HttpRequest):
-    data = []
-    for index, key in enumerate(dehaze_model):
-        model = {
-            'id': index,
-            'model_name': key,
-            'description': ''
-        }
-        data.append(model)
-    return ok_response(data)
-
-
 def upload_image(request: HttpRequest):
     image_name = str(uuid.uuid4()) + ".png"
     image_path = os.path.join(DATA_PATH, image_name)
@@ -134,7 +134,8 @@ def dehaze_image(request: HttpRequest):
         else:
             return error_response('1', "无法找到模型")
     except RuntimeError as e:
-        return error_response('1', e)
+        traceback.print_exc()
+        return error_response('1', e.__str__())
 
     return ok_response({'image_name': output_image_name})
 
@@ -149,5 +150,3 @@ def calculate_dehaze_index(request: HttpRequest):
     psnr, ssim = calculate(haze_image_path, clear_image_path)
     return ok_response({'psnr': psnr, 'ssim': ssim})
 
-if __name__ == '__main__':
-    print(get_model2())
