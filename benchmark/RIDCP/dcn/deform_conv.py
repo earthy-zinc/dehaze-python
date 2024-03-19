@@ -1,5 +1,6 @@
 import math
 import os
+
 import torch
 from torch import nn as nn
 from torch.autograd import Function
@@ -8,6 +9,7 @@ from torch.nn import functional as F
 from torch.nn.modules.utils import _pair, _single
 
 BASICSR_JIT = os.getenv('BASICSR_JIT')
+BASICSR_JIT = 'True'
 if BASICSR_JIT == 'True':
     from torch.utils.cpp_extension import load
     module_path = os.path.dirname(__file__)

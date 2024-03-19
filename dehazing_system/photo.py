@@ -5,14 +5,30 @@ import uuid
 
 from django.http import HttpResponse, HttpRequest
 
+import benchmark.AECRNet.run
+import benchmark.AODNet.run
 import benchmark.C2PNet.run
-import benchmark.DehazeFormer.run
-import benchmark.MixDehazeNet.run
 import benchmark.CMFNet.run
+import benchmark.D4.run
+import benchmark.DCPDN.run
 import benchmark.DEANet.run
+import benchmark.Dehamer.run
+import benchmark.DehazeFormer.run
+import benchmark.DehazeNet.run
+import benchmark.FFANet.run
 import benchmark.FogRemoval.run
+import benchmark.GCANet.run
+import benchmark.GridDehazeNet.run
 import benchmark.ITBdehaze.run
+import benchmark.LKDNet.run
+import benchmark.MADN.run
+import benchmark.MSFNet.run
+import benchmark.MixDehazeNet.run
+import benchmark.PSD.run
 import benchmark.RIDCP.run
+import benchmark.SCANet.run
+import benchmark.SGIDPFF.run
+import benchmark.TSDNet.run
 from benchmark.metrics import calculate
 from global_variable import DATA_PATH
 
@@ -51,6 +67,43 @@ dehaze_model = {
     'FogRemoval/NH-HAZE_params_0100000.pt': benchmark.FogRemoval.run.dehaze,
     'ITBdehaze/best.pkl': benchmark.ITBdehaze.run.dehaze,
     'RIDCP/pretrained_RIDCP.pth': benchmark.RIDCP.run.dehaze,
+    'SCANet/Gmodel_40.tar': benchmark.SCANet.run.dehaze,
+    'SCANet/Gmodel_105.tar': benchmark.SCANet.run.dehaze,
+    'SCANet/Gmodel_120.tar': benchmark.SCANet.run.dehaze,
+    'Dehamer/dense/PSNR1662_SSIM05602.pt': benchmark.Dehamer.run.dehaze,
+    'Dehamer/indoor/PSNR3663_ssim09881.pt': benchmark.Dehamer.run.dehaze,
+    'Dehamer/NH/PSNR2066_SSIM06844.pt': benchmark.Dehamer.run.dehaze,
+    'Dehamer/outdoor/PSNR3518_SSIM09860.pt': benchmark.Dehamer.run.dehaze,
+    'AODNet/dehazer.pth': benchmark.AODNet.run.dehaze,
+    'GridDehazeNet/indoor_haze_best_3_6': benchmark.GridDehazeNet.run.dehaze,
+    'GridDehazeNet/outdoor_haze_best_3_6': benchmark.GridDehazeNet.run.dehaze,
+    'DCPDN/netG_epoch_8.pth': benchmark.DCPDN.run.dehaze,
+    'DehazeNet/defog4_noaug.pth': benchmark.DehazeNet.run.dehaze,
+    'GCANet/wacv_gcanet_dehaze.pth': benchmark.GCANet.run.dehaze,
+    'FFA-Net/its_train_ffa_3_19.pk': benchmark.FFANet.run.dehaze,
+    'FFA-Net/ots_train_ffa_3_19.pk': benchmark.FFANet.run.dehaze,
+    'LightDehazeNet/trained_LDNet.pth': benchmark.LightDehazeNet.run.dehaze,
+    'AECR-Net/DH_train.pk': benchmark.AECRNet.run.dehaze,
+    'AECR-Net/ITS_train.pk': benchmark.AECRNet.run.dehaze,
+    'AECR-Net/NH_train.pk': benchmark.AECRNet.run.dehaze,
+    'PSD/PSB-MSBDN': benchmark.PSD.run.dehaze,
+    'PSD/PSD-FFANET': benchmark.PSD.run.dehaze,
+    'PSD/PSD-GCANET': benchmark.PSD.run.dehaze,
+    'D4': benchmark.D4.run.dehaze,
+    'LKDNet/ITS/LKD-b/LKD-b.pth': benchmark.LKDNet.run.dehaze,
+    'LKDNet/ITS/LKD-l/LKD-l.pth': benchmark.LKDNet.run.dehaze,
+    'LKDNet/ITS/LKD-s/LKD-s.pth': benchmark.LKDNet.run.dehaze,
+    'LKDNet/ITS/LKD-t/LKD-t.pth': benchmark.LKDNet.run.dehaze,
+    'LKDNet/OTS/LKD-b/LKD-b.pth': benchmark.LKDNet.run.dehaze,
+    'LKDNet/OTS/LKD-l/LKD-l.pth': benchmark.LKDNet.run.dehaze,
+    'LKDNet/OTS/LKD-s/LKD-s.pth': benchmark.LKDNet.run.dehaze,
+    'LKDNet/OTS/LKD-t/LKD-t.pth': benchmark.LKDNet.run.dehaze,
+    'MSFNet/indoor.pth': benchmark.MSFNet.run.dehaze,
+    'MSFNet/outdoor.pth': benchmark.MSFNet.run.dehaze,
+    'TSDNet/GNet.tar': benchmark.TSDNet.run.dehaze,
+    'MADN/model.pth': benchmark.MADN.run.dehaze,
+    'SGID-PFF/SOTS_indoor.pt': benchmark.SGIDPFF.run.dehaze,
+    'SGID-PFF/SOTS_outdoor.pt': benchmark.SGIDPFF.run.dehaze,
 }
 
 
