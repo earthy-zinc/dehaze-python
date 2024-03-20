@@ -25,7 +25,8 @@ import benchmark.MADN.run
 import benchmark.MSFNet.run
 import benchmark.MixDehazeNet.run
 import benchmark.PSD.run
-import benchmark.RIDCP.run
+# import benchmark.RIDCP.run
+import benchmark.LightDehazeNet.run
 import benchmark.SCANet.run
 import benchmark.SGIDPFF.run
 import benchmark.TSDNet.run
@@ -66,7 +67,7 @@ dehaze_model = {
     'DEA-Net/OTS/PSNR3659_SSIM9897.pth': benchmark.DEANet.run.dehaze,
     'FogRemoval/NH-HAZE_params_0100000.pt': benchmark.FogRemoval.run.dehaze,
     'ITBdehaze/best.pkl': benchmark.ITBdehaze.run.dehaze,
-    'RIDCP/pretrained_RIDCP.pth': benchmark.RIDCP.run.dehaze,
+    # 'RIDCP/pretrained_RIDCP.pth': benchmark.RIDCP.run.dehaze,
     'SCANet/Gmodel_40.tar': benchmark.SCANet.run.dehaze,
     'SCANet/Gmodel_105.tar': benchmark.SCANet.run.dehaze,
     'SCANet/Gmodel_120.tar': benchmark.SCANet.run.dehaze,

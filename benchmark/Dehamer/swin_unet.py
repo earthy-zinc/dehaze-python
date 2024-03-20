@@ -1,3 +1,7 @@
+import torch
+from torch import nn
+
+from benchmark.Dehamer.MIRNet import MSRB
 from benchmark.Dehamer.swin import SwinTransformer
 import torch.nn.functional as F
 

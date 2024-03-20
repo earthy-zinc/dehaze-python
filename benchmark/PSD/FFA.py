@@ -2,6 +2,9 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+from benchmark.FFANet.FFA import FFA
+
+
 class BlockUNet1(nn.Module):
     def __init__(self, in_channels, out_channels, upsample=False, relu=False, drop=False, bn=True):
         super(BlockUNet1, self).__init__()
@@ -90,10 +93,10 @@ class G2(nn.Module):
         out = self.lrelu(out)
 
         return F.avg_pool2d(out, (out.shape[2], out.shape[3]))
-    
+
 def default_conv(in_channels, out_channels, kernel_size, bias=True):
     return nn.Conv2d(in_channels, out_channels, kernel_size,padding=(kernel_size//2), bias=bias)
-    
+
 class PALayer(nn.Module):
     def __init__(self, channel):
         super(PALayer, self).__init__()
@@ -133,11 +136,11 @@ class Block(nn.Module):
         self.palayer=PALayer(dim)
     def forward(self, x):
         res=self.act1(self.conv1(x))
-        res=res+x 
+        res=res+x
         res=self.conv2(res)
         res=self.calayer(res)
         res=self.palayer(res)
-        res += x 
+        res += x
         return res
 class Group(nn.Module):
     def __init__(self, conv, dim, kernel_size, blocks):
@@ -174,7 +177,7 @@ class FFANet(nn.Module):
         self.conv_J_2 = nn.Conv2d(64, 3, 3, 1, 1, bias=False)
         self.conv_T_1 = nn.Conv2d(64, 16, 3, 1, 1, bias=False)
         self.conv_T_2 = nn.Conv2d(16, 1, 3, 1, 1, bias=False)
-        
+
         post_precess = [
             conv(self.dim, self.dim, kernel_size),
             conv(self.dim, 3, kernel_size)]
@@ -192,22 +195,22 @@ class FFANet(nn.Module):
         w=w.view(-1,self.gps,self.dim)[:,:,:,None,None]
         out=w[:,0,::]*res1+w[:,1,::]*res2+w[:,2,::]*res3
         out=self.palayer(out)
-        
+
         out_J = self.conv_J_1(out)
         out_J = self.conv_J_2(out_J)
         out_J = out_J + x1
         out_T = self.conv_T_1(out)
         out_T = self.conv_T_2(out_T)
-        
+
         if Val == False:
             out_A = self.ANet(x1)
         else:
             out_A = self.ANet(x2)
-            
+
         out_I = out_T * out_J + (1 - out_T) * out_A
         #x=self.post(out)
         return out, out_J, out_T, out_A, out_I
-    
+
 if __name__ == "__main__":
     net=FFA(gps=3,blocks=19)
     print(net)

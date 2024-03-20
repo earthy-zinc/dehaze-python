@@ -134,7 +134,7 @@ class Encoder_MDCBlock1(torch.nn.Module):
                 ft_fusion = ft_fusion + ft
 
         return ft_fusion
-    
+
 class Decoder_MDCBlock1(torch.nn.Module):
     def __init__(self, num_filter, num_ft, kernel_size=4, stride=2, padding=1, bias=True, activation='prelu', norm=None, mode='iter1'):
         super(Decoder_MDCBlock1, self).__init__()
@@ -196,9 +196,7 @@ class Decoder_MDCBlock1(torch.nn.Module):
                 ft_fusion = ft_fusion + ft
 
         return ft_fusion
-    
-def make_model(args, parent=False):
-    return Net()
+
 
 class BlockUNet1(nn.Module):
     def __init__(self, in_channels, out_channels, upsample=False, relu=False, drop=False, bn=True):
@@ -457,7 +455,7 @@ class MSBDNNet(nn.Module):
         res16x = self.convd16x(res16x)
         res16x = F.upsample(res16x, res8x.size()[2:], mode='bilinear')
         res8x = torch.add(res16x, res8x)
-        res8x = self.dense_4(res8x) + res8x - res16x 
+        res8x = self.dense_4(res8x) + res8x - res16x
         res8x = self.fusion_4(res8x, feature_mem_up)
         feature_mem_up.append(res8x)
 
@@ -471,14 +469,14 @@ class MSBDNNet(nn.Module):
         res4x = self.convd4x(res4x)
         res4x = F.upsample(res4x, res2x.size()[2:], mode='bilinear')
         res2x = torch.add(res4x, res2x)
-        res2x = self.dense_2(res2x) + res2x - res4x 
+        res2x = self.dense_2(res2x) + res2x - res4x
         res2x = self.fusion_2(res2x, feature_mem_up)
         feature_mem_up.append(res2x)
 
         res2x = self.convd2x(res2x)
         res2x = F.upsample(res2x, x.size()[2:], mode='bilinear')
         x = torch.add(res2x, x)
-        x = self.dense_1(x) + x - res2x 
+        x = self.dense_1(x) + x - res2x
         out = self.fusion_1(x, feature_mem_up)
         out = self.upsample(out)
 
@@ -486,12 +484,12 @@ class MSBDNNet(nn.Module):
         out_J = self.conv_J_2(out_J)
         out_T = self.conv_T_1(out)
         out_T = self.conv_T_2(out_T)
-        
+
         if Val == False:
             out_A = self.ANet(x1)
         else:
             out_A = self.ANet(x2)
-            
+
         out_I = out_T * out_J + (1 - out_T) * out_A
-        
+
         return out, out_J, out_T, out_A, out_I
