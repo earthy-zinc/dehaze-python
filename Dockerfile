@@ -1,8 +1,27 @@
-FROM python:3.11
+FROM nvidia/cuda:12.1.1-cudnn8-devel-ubuntu20.04
 
-# /tmp 目录就会在运行时自动挂载为匿名卷，任何向 /tmp 中写入的信息都不会记录进容器存储层
-VOLUME /tmp
-
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      wget \
+      build-essential \
+      libreadline-gplv2-dev \
+      libncursesw5-dev \
+      libssl-dev \
+      libsqlite3-dev \
+      tk-dev \
+      libgdbm-dev \
+      libc6-dev \
+      libbz2-dev \
+      libffi-dev \
+      zlib1g-dev \
+      && rm -rf /var/lib/apt/lists/* \
+    && wget https://www.python.org/ftp/python/3.11.8/Python-3.11.8.tgz \
+    && tar xzf Python-3.11.8.tgz \
+    && cd Python-3.11.8 \
+    && ./configure --enable-optimizations \
+    && make altinstall \
+    && rm -rf ../Python-3.11.8.tgz \
+    && update-alternatives --install /usr/bin/python python /usr/local/bin/python3.11 1 \
+    && update-alternatives --set python /usr/local/bin/python3.11
 # 创建 code 文件夹并将其设置为工作目录
 RUN mkdir /code && mkdir /pip_cache
 
@@ -11,6 +30,7 @@ ENV PYTHONUNBUFFERED 1
 ENV PIP_CACHE_DIR=/pip_cache
 
 WORKDIR /code
+VOLUME /code/trained_model
 
 # 将所有文件复制到容器的 code 目录
 ADD . /code/
