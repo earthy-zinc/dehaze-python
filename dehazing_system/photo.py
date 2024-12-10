@@ -4,6 +4,7 @@ import traceback
 import uuid
 
 from django.http import HttpResponse, HttpRequest
+import torch
 
 import benchmark.AECRNet.run
 import benchmark.AODNet.run
@@ -190,6 +191,8 @@ def dehaze_image(request: HttpRequest):
     except RuntimeError as e:
         traceback.print_exc()
         return error_response('1', e.__str__())
+    finally:
+        torch.cuda.empty_cache()
 
     return ok_response({'image_name': output_image_name})
 
